@@ -1,5 +1,7 @@
 # Name Sorter
 
+![Build](https://github.com/ahsanalilaghari/NameSorter/actions/workflows/build.yml/badge.svg)
+
 Sorts a list of names by last name, then by given names, and writes the result to the
 screen and to a file.
 

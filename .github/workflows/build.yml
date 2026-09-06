@@ -1,0 +1,38 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    name: Build and test on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Build, test and package
+        run: ./mvnw --batch-mode verify
+        shell: bash
+
+      - name: Run the launcher against the sample file (Unix script)
+        if: runner.os != 'Windows'
+        run: ./name-sorter unsorted-names-list.txt
+
+      - name: Run the launcher against the sample file (Windows script)
+        if: runner.os == 'Windows'
+        run: .\name-sorter.cmd unsorted-names-list.txt
