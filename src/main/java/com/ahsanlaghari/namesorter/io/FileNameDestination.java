@@ -30,6 +30,7 @@ public final class FileNameDestination implements NameDestination {
                 .map(Name::fullName)
                 .collect(Collectors.toList());
 
+        // These are the JDK defaults, written out so that the default behaviour is known at a glance
         Files.write(file, lines, StandardCharsets.UTF_8,
                 StandardOpenOption.CREATE,
                 StandardOpenOption.TRUNCATE_EXISTING,

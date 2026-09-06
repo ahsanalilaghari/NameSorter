@@ -11,8 +11,8 @@ import java.util.List;
  * first) is a new {@link Comparator} handed to {@link NameSorter}, not a change here.
  *
  * <p>Comparison ignores case, so {@code "de Souza"} and {@code "De Souza"} sort together.
- * The PDF does not say either way, so I am going with the usual assumption in comparisons
- * Only the comparison ignores case but the names themselves keep their original casing.
+ * The requirements do not say either way, so we chose what a person expects from a phone
+ * book. Only the comparison ignores case: the names themselves keep their original casing.
  *
  * <p>When one name's given names are a prefix of another's, the shorter name comes
  * first, so {@code "Leo Gardner"} sorts before {@code "Leo James Gardner"}.

@@ -7,7 +7,7 @@ import java.util.Objects;
 /**
  * Turns one line of text such as {@code "Hunter Uriah Mathew Clarke"} into a {@link Name}.
  *
- * <p>The format is the one seen in the PDF: words separated by whitespace, where the
+ * <p>The format is the one described in the requirements: words separated by whitespace, where the
  * last word is the last name and every word before it is a given name. Leading, trailing
  * and repeated whitespace is ignored, so {@code "  Leo   Gardner "} parses the same as
  * {@code "Leo Gardner"}. Casing is preserved exactly as written.
@@ -34,8 +34,9 @@ public final class NameParser {
         }
 
         List<String> words = Arrays.asList(trimmedLine.split(WHITESPACE));
-        List<String> givenNames = words.subList(0, words.size() - 1);
-        String lastName = words.get(words.size() - 1);
+        int lastWordIndex = words.size() - 1;
+        List<String> givenNames = words.subList(0, lastWordIndex);
+        String lastName = words.get(lastWordIndex);
 
         try {
             return new Name(givenNames, lastName);

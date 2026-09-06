@@ -64,6 +64,19 @@ class FileNameSourceTest {
     }
 
     @Test
+    void readsWindowsAndUnixLineEndingsWithOrWithoutAFinalNewline() throws IOException {
+        Path file = directory.resolve("names.txt");
+        Files.writeString(file, "Janet Parsons\r\nLeo Gardner\nMarin Alvarez", StandardCharsets.UTF_8);
+
+        List<Name> names = new FileNameSource(file, parser).readNames();
+
+        assertThat(names).containsExactly(
+                new Name(List.of("Janet"), "Parsons"),
+                new Name(List.of("Leo"), "Gardner"),
+                new Name(List.of("Marin"), "Alvarez"));
+    }
+
+    @Test
     void reportsTheFileAndLineNumberOfAnInvalidName() throws IOException {
         Path file = fileContaining("Janet Parsons", "Clarke", "Leo Gardner");
 

@@ -15,7 +15,7 @@ class NameSorterTest {
     private final NameSorter sorter = new NameSorter(new LastNameThenGivenNamesComparator());
 
     @Test
-    void sortsTheExampleFromTheFile() {
+    void sortsTheExampleFromTheRequirements() {
         List<Name> unsorted = names(
                 "Janet Parsons",
                 "Vaugh Lewis",
@@ -62,6 +62,13 @@ class NameSorterTest {
         List<Name> sorted = sorter.sort(unsorted);
 
         assertThat(sorted).containsExactlyElementsOf(unsorted);
+    }
+
+    @Test
+    void keepsDuplicateNamesRatherThanRemovingThem() {
+        List<Name> sorted = sorter.sort(names("Leo Gardner", "Marin Alvarez", "Leo Gardner"));
+
+        assertThat(sorted).containsExactlyElementsOf(names("Marin Alvarez", "Leo Gardner", "Leo Gardner"));
     }
 
     @Test
