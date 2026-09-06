@@ -142,3 +142,12 @@ each test checks one behaviour and is named as a sentence, so the report reads a
 specification. File handling is tested against real files in a temporary directory, and
 `MainTest` runs the whole program against `unsorted-names-list.txt` and checks both the
 printed output and the written file.
+
+## Known limitations and possible next steps
+
+- **Input is read fully into memory.** Fine for thousands of names, not for millions. A
+  streaming `NameSource` and an external sort would slot in behind the existing interfaces.
+- **Sorting is by Unicode value, not locale.** `compareToIgnoreCase` orders accented and
+    non-Latin letters by code point, so `Émile` sorts after `Zoe`. Using a `java.text.Collator`
+    in `LastNameThenGivenNamesComparator` would give locale-aware ordering. This would be the
+    first change to make for international name lists.
