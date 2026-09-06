@@ -75,6 +75,17 @@ class FileNameSourceTest {
     }
 
     @Test
+    void reportsTheFileAndLineNumberOfAnInvalidNameCountingBlankLines() throws IOException {
+        Path file = fileContaining("Janet Parsons", "", "Clarke", "Leo Gardner");
+
+        assertThatThrownBy(() -> new FileNameSource(file, parser).readNames())
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining(file.toString())
+                .hasMessageContaining("line 3")
+                .hasMessageContaining("Invalid name 'Clarke'");
+    }
+
+    @Test
     void failsWhenTheFileDoesNotExist() {
         Path missing = directory.resolve("does-not-exist.txt");
 
