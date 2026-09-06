@@ -3,6 +3,7 @@
 
 # Unix shell scripts must stay LF or they fail with "bad interpreter".
 mvnw text eol=lf
+name-sorter text eol=lf
 *.sh text eol=lf
 
 # Windows batch scripts must stay CRLF.
