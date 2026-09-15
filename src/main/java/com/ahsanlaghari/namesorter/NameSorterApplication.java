@@ -32,7 +32,6 @@ public final class NameSorterApplication {
 
     /**
      * @throws IOException              if the source cannot be read or a destination cannot be written
-     * @throws IllegalArgumentException if the source contains an invalid name
      */
     public void run() throws IOException {
         List<Name> names = source.readNames();

@@ -4,6 +4,7 @@ import com.ahsanlaghari.namesorter.domain.Name;
 import com.ahsanlaghari.namesorter.domain.NameParser;
 
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,19 +16,21 @@ import java.util.Objects;
 /**
  * Reads names from a UTF-8 text file with one name per line.
  *
- * <p>Blank lines are skipped, since a trailing newline or a stray empty line is not a
- * mistake worth stopping the run for. Any other line must be a valid name. The first
- * invalid line stops the run with an error that names the file and line number, rather
- * than silently producing a sorted list with entries missing.
+ * <p>Blank lines are skipped. A line that is not a valid name is also skipped, with a
+ * warning naming the file and line number written to the warnings stream, so the rest
+ * of the file is still sorted. The warnings stream is injected rather than hard-coded
+ * to {@code System.err} so tests can capture it.
  */
 public final class FileNameSource implements NameSource {
 
     private final Path file;
     private final NameParser parser;
+    private final PrintStream warnings;
 
-    public FileNameSource(Path file, NameParser parser) {
+    public FileNameSource(Path file, NameParser parser, PrintStream warnings) {
         this.file = Objects.requireNonNull(file, "file must not be null");
         this.parser = Objects.requireNonNull(parser, "parser must not be null");
+        this.warnings = Objects.requireNonNull(warnings, "warnings must not be null");
     }
 
     @Override
@@ -41,17 +44,12 @@ public final class FileNameSource implements NameSource {
                 continue;
             }
             int lineNumber = index + 1;
-            names.add(parseLine(line, lineNumber));
+            try {
+                names.add(parser.parse(line));
+            } catch (IllegalArgumentException invalidName) {
+                warnings.println(file + ", line " + lineNumber + ": skipped. " + invalidName.getMessage());
+            }
         }
         return Collections.unmodifiableList(names);
-    }
-
-    private Name parseLine(String line, int lineNumber) {
-        try {
-            return parser.parse(line);
-        } catch (IllegalArgumentException invalidName) {
-            throw new IllegalArgumentException(
-                    file + ", line " + lineNumber + ": " + invalidName.getMessage(), invalidName);
-        }
     }
 }

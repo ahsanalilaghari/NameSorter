@@ -16,7 +16,6 @@ public interface NameSource {
     /**
      * @return every name the source holds, in the order the source provides them
      * @throws IOException              if the source cannot be read
-     * @throws IllegalArgumentException if the source contains something that is not a valid name
      */
     List<Name> readNames() throws IOException;
 }
