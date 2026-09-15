@@ -81,15 +81,16 @@ class MainTest {
     }
 
     @Test
-    void reportsAnInvalidNameWithItsLineNumberWithoutWritingOutput() throws IOException {
+    void skipsAnInvalidNameWithAWarningAndStillWritesTheRest() throws IOException {
         Files.write(workingDirectory.resolve("names.txt"),
-                List.of("Janet Parsons", "Clarke"), StandardCharsets.UTF_8);
+                List.of("Janet Parsons", "Clarke", "Marin Alvarez"), StandardCharsets.UTF_8);
 
         int exitCode = run("names.txt");
 
-        assertThat(exitCode).isEqualTo(1);
-        assertThat(errorOutput()).contains("line 2").contains("Invalid name 'Clarke'");
-        assertThat(outputFile()).doesNotExist();
+        assertThat(exitCode).isZero();
+        assertThat(errorOutput()).contains("line 2").contains("skipped").contains("Invalid name 'Clarke'");
+        assertThat(standardOutput().lines()).containsExactly("Marin Alvarez", "Janet Parsons");
+        assertThat(linesOf(outputFile())).containsExactly("Marin Alvarez", "Janet Parsons");
     }
 
     private int run(String... args) {

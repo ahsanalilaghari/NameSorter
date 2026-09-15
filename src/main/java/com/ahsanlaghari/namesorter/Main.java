@@ -61,7 +61,7 @@ public final class Main {
                 new FileNameDestination(outputFile));
 
         NameSorterApplication application = new NameSorterApplication(
-                new FileNameSource(inputFile, new NameParser()),
+                new FileNameSource(inputFile, new NameParser(), err),
                 new NameSorter(new LastNameThenGivenNamesComparator()),
                 destinations);
 

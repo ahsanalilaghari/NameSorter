@@ -56,7 +56,7 @@ java -jar target/name-sorter.jar ./unsorted-names-list.txt
 
 The sorted names are printed to standard output and written to `sorted-names-list.txt`
 in the directory the command is run from. The exit code is `0` on success and `1` if the
-arguments are wrong, the input file cannot be read, or a line is not a valid name. Error
+arguments are wrong, the input file cannot be read. Error
 messages go to standard error and name the file and line number where possible.
 
 ## Rules and assumptions
@@ -74,9 +74,10 @@ assumption of the parts that the requirements left unsaid.
   Blank lines are skipped.
 - **Hyphens and apostrophes are part of a word.** `Mary-Jane O'Brien` is one given name
   and one last name.
-- **An invalid line stops the run.** A line with zero or more than three given names is
-  reported with its line number and nothing is written. Silently skipping it would produce
-  a sorted list with entries missing, which is worse than a clear failure.
+- **An invalid line is skipped with a warning.** A line with zero or more than three given
+  names is reported on standard error with its line number, and the remaining names are
+  still sorted and written. The exit code stays `0`. Whether to skip or fail is decided in
+  `FileNameSource` alone, so making it a command-line flag would touch one class.
 - **Files are read and written as UTF-8**, with either Windows or Unix line endings
   accepted on input. The output file ends with a newline, as text files conventionally do.
 - **The sample input contains `Vaugh Lewis`** while the expected output in the requirements
